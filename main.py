@@ -7,7 +7,7 @@ import time
 
 tracker_id = 'aj'
 
-def load_new_style(file_name) -> pd.DataFrame:
+def load_new_style(file_name: str) -> pd.DataFrame:
   output = []
   for r in json.load(open(file_name))['semanticSegments']:
       if 'timelinePath' in r:
@@ -22,8 +22,8 @@ def load_new_style(file_name) -> pd.DataFrame:
 
   return pd.DataFrame(output)
 
-def load_old_style() -> pd.DataFrame:
-  df_gps = pd.read_json('/data/Records.json', typ='frame', orient='records')
+def load_old_style(file_name: str) -> pd.DataFrame:
+  df_gps = pd.read_json(file_name, typ='frame', orient='records')
   gps = df_gps.apply(lambda x: x['locations'], axis=1, result_type='expand')
   gps['latitudeE7'] = gps['latitudeE7'] / 10.**7
   gps['longitudeE7'] = gps['longitudeE7'] / 10.**7
