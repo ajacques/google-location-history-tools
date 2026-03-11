@@ -58,14 +58,14 @@ def render_device_chart(df: pd.DataFrame):
         plt.hlines(y=i, xmin=first_year, xmax=last_year, color=colors[i], linewidth=4)
         plt.text(middle_year, i + 0.25, device, verticalalignment="center", fontsize=8)
 
-        plt.xlabel("Year")
-        plt.ylabel("Device")
-        plt.title("Device Reporting Years")
-        plt.tick_params(axis="x", which="both", bottom=True, top=True)
-        plt.grid(True)
+    plt.xlabel("Year")
+    plt.ylabel("Device")
+    plt.title("Device Reporting Years")
+    plt.tick_params(axis="x", which="both", bottom=True, top=True)
+    plt.grid(True)
 
         # Show the plot
-        plt.show()
+    plt.show()
 
 
 def save_output(gps: pd.DataFrame):
