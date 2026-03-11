@@ -19,5 +19,4 @@ For Google Maps Mobile Export:
 
 ```shell
 uv run main.py Timeline.json --gmaps --tracker-id [two digit owntracks tracker id]
-
-``
+```
