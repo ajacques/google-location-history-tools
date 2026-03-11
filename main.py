@@ -1,3 +1,4 @@
+import argparse
 import datetime
 import json
 import matplotlib.pyplot as plt
@@ -5,7 +6,38 @@ import os
 import pandas as pd
 import time
 
-tracker_id = "aj"
+
+def main():
+    parser = argparse.ArgumentParser(description="Process Google Location History")
+    parser.add_argument(
+        "file",
+        nargs="?",
+        default="Records.json",
+        help="Path to the location history file",
+    )
+    parser.add_argument(
+        "--tracker-id", "-t", help="A two-digit tracker ID for OwnTracks"
+    )
+    parser.add_argument(
+        "--takeout", action="store_true", help="Use old-style Takeout format loader"
+    )
+    parser.add_argument(
+        "--gmaps", action="store_true", help="Use new-style Google Maps format loader"
+    )
+    args = parser.parse_args()
+
+    if args.takeout:
+        df = load_old_style(args.file)
+    elif args.gmaps:
+        df = load_new_style(args.file)
+    else:
+        print("uv run main.py Records.json --takeout|--gmaps --tracker-id [two digit]")
+        return
+
+    tracker_id = args.tracker_id
+
+    render_device_chart(df)
+    #save_output(df, tracker_id)
 
 
 def load_new_style(file_name: str) -> pd.DataFrame:
@@ -31,13 +63,7 @@ def load_old_style(file_name: str) -> pd.DataFrame:
     gps = df_gps.apply(lambda x: x["locations"], axis=1, result_type="expand")
     gps["latitudeE7"] = gps["latitudeE7"] / 10.0**7
     gps["longitudeE7"] = gps["longitudeE7"] / 10.0**7
-    gps.loc[
-        gps["timestamp"].str.len() == len("2013-12-16T05:42:25.711Z"), "timestamp"
-    ] = pd.to_datetime(gps["timestamp"])
-    gps.loc[gps["timestamp"].str.len() == len("2013-12-16T05:42:25Z"), "timestamp"] = (
-        pd.to_datetime(gps["timestamp"], format="%Y-%m-%dT%H:%M:%S%Z", utc=True)
-    )
-    gps["timestamp"] = pd.to_datetime(gps["timestamp"])
+    gps['timestamp'] = pd.to_datetime(gps['timestamp'], format='ISO8601')
 
     return gps
 
@@ -68,7 +94,7 @@ def render_device_chart(df: pd.DataFrame):
     plt.show()
 
 
-def save_output(gps: pd.DataFrame):
+def save_output(gps: pd.DataFrame, tracker_id: str):
     output_folder = "output"
     if not os.path.exists(output_folder):
         os.makedirs(output_folder)
@@ -116,8 +142,5 @@ def save_output(gps: pd.DataFrame):
             file.close()
 
 
-df = load_new_style("./Timeline.json")
-
-render_device_chart(df)
-
-save_output(df)
+if __name__ == "__main__":
+    main()
