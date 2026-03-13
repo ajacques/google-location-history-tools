@@ -55,7 +55,9 @@ def load_new_style(file_name: str) -> pd.DataFrame:
                 )
                 # TODO: Emit DeviceTag
 
-    return pd.DataFrame(output)
+    df = pd.DataFrame(output)
+    df['timestamp2'] = pd.to_datetime(df['timestamp'], utc=True)
+    return df
 
 
 def load_old_style(file_name: str) -> pd.DataFrame:
@@ -107,7 +109,7 @@ def save_output(gps: pd.DataFrame, tracker_id: str):
             "verticalAccuracy": "vac",
         }
     )
-    owntracks["tst"] = owntracks["timestamp"].astype(int) / 10**9
+    owntracks["tst"] = owntracks["timestamp"].astype('int64') / 10**9
 
     files = {}
 
