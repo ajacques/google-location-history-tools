@@ -36,6 +36,8 @@ def main():
 
     tracker_id = args.tracker_id
 
+    print(df.dtypes)
+
     render_device_chart(df)
     #save_output(df, tracker_id)
 
