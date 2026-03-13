@@ -28,6 +28,7 @@ def main():
 
     if args.takeout:
         df = load_old_style(args.file)
+        render_device_chart(df)
     elif args.gmaps:
         df = load_new_style(args.file)
     else:
@@ -36,8 +37,7 @@ def main():
 
     tracker_id = args.tracker_id
 
-    render_device_chart(df)
-    #save_output(df, tracker_id)
+    save_output(df, tracker_id)
 
 
 def load_new_style(file_name: str) -> pd.DataFrame:
