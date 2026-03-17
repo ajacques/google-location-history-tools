@@ -56,7 +56,7 @@ def load_new_style(file_name: str) -> pd.DataFrame:
                 # TODO: Emit DeviceTag
 
     df = pd.DataFrame(output)
-    df['timestamp2'] = pd.to_datetime(df['timestamp'], utc=True)
+    df['timestamp'] = pd.to_datetime(df['timestamp'], utc=True)
     return df
 
 
